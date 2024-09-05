@@ -1,0 +1,49 @@
+apiVersion: skaffold/v4beta3
+kind: Config
+manifests:
+  rawYaml:
+    - infra/k8s/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: sumitatsutraa/client
+      context: services/client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.tsx"
+            dest: .
+          - src: "src/**/*.css"
+            dest: .
+    - image: sumitatsutraa/auth
+      context: services/auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+          - src: "src/**/*.*.ts"
+            dest: .
+    - image: sumitatsutraa/ticket
+      context: services/ticket
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+          - src: "src/**/*.*.ts"
+            dest: .
+    - image: sumitatsutraa/order
+      context: services/order
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+          - src: "src/**/*.*.ts"
+            dest: .
