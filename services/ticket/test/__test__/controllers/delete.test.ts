@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../../app";
+import app from "../../../src/app";
 
 it("Delete: 200 on valid input", async () => {
   const cookie = await global.signin();

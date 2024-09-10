@@ -32,8 +32,6 @@ class Nats {
 
     callback();
 
-    this.client.closed().then(() => console.log("NATS closed"));
-
     process.on("SIGINT", async () => {
       console.log("NATS shutting down gracefully...");
       await this.client.close();

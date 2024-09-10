@@ -7,7 +7,10 @@ validateEnv();
 
 const start = async () => {
   console.log("==================== Auth Service ====================");
-  await nats.connect("nats://nats-srv:4222", { debug: false }, () => console.log("NATS connected -> auth"));
+  await nats.connect("nats://nats-srv:4222", { debug: false }, () => {
+    console.log("NATS connected -> auth");
+    nats.client.closed().then(() => console.log("NATS closed -> auth"));
+  });
   await nats.createStream(auth.streamName, Object.values(auth.subjects));
   await mongoose
     .connect(process.env.MONGODB_CONN!)

@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../../app";
+import app from "../../../src/app";
 
 it("Get: 200 success", async () => {
   const cookie = await global.signin();

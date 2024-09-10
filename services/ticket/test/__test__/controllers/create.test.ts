@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../../app";
+import app from "../../../src/app";
 
 it("Create: 201 on valid input", async () => {
   await request(app)

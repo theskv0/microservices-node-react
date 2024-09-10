@@ -12,7 +12,10 @@ validateEnv();
 const start = async () => {
   console.log("==================== Order Service ====================");
 
-  await nats.connect("nats://nats-srv:4222", { debug: false }, () => console.log("NATS connected -> order"));
+  await nats.connect("nats://nats-srv:4222", { debug: false }, () => {
+    console.log("NATS connected -> order");
+    nats.client.closed().then(() => console.log("NATS closed -> order"));
+  });
   await nats.createStream(order.streamName, Object.values(order.subjects));
   await nats.addConsumer(auth.streamName, "order-service");
   await nats.addConsumer(ticket.streamName, "order-service");

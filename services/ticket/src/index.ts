@@ -9,7 +9,10 @@ validateEnv();
 const start = async () => {
   console.log("==================== Ticket Service ====================");
 
-  await nats.connect("nats://nats-srv:4222", { debug: false }, () => console.log("NATS connected -> ticket"));
+  await nats.connect("nats://nats-srv:4222", { debug: false }, () => {
+    console.log("NATS connected -> ticket");
+    nats.client.closed().then(() => console.log("NATS closed -> ticket"));
+  });
   await nats.addConsumer(auth.streamName, "ticket-service");
   await nats.createStream(ticket.streamName, Object.values(ticket.subjects));
   startNatsListeners();
