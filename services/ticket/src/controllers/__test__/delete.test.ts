@@ -1,8 +1,8 @@
 import request from "supertest";
-import app from "../../../app";
+import app from "../../app";
 
 it("Delete: 200 on valid input", async () => {
-  const cookie = global.signin();
+  const cookie = await global.signin();
   const response = await request(app)
     .post("/api/ticket")
     .set("Cookie", cookie)
@@ -31,7 +31,7 @@ it("Delete: 401 on unauthenticated", async () => {
 it("Delete: 403 access denied", async () => {
   const response = await request(app)
     .post("/api/ticket")
-    .set("Cookie", global.signin())
+    .set("Cookie", await global.signin())
     .send({
       title: "Test",
       price: 100,
@@ -40,13 +40,13 @@ it("Delete: 403 access denied", async () => {
 
   await request(app)
     .delete("/api/ticket/" + response.body.ticket.id)
-    .set("Cookie", global.signin())
+    .set("Cookie", await global.signin())
     .expect(403);
 });
 
 it("Delete: 422 on invalid ticket_id", async () => {
   await request(app)
     .delete("/api/ticket/" + "ticket.id")
-    .set("Cookie", global.signin())
+    .set("Cookie", await global.signin())
     .expect(422);
 });

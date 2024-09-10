@@ -1,10 +1,11 @@
-import { model, Model, Schema, ObjectId, Types } from "mongoose";
+import { CallbackWithoutResultAndOptionalError, model, Model, Schema, Types } from "mongoose";
 import IBase from "./base.model";
+import { IUser } from "./user.model";
 
 export interface ITicket extends IBase {
   title: string;
   price: number;
-  user: ObjectId;
+  user: IUser;
 }
 
 export type TicketModel = Model<ITicket>;
@@ -36,6 +37,17 @@ const TicketSchema = new Schema<ITicket, TicketModel>(
     },
   }
 );
+
+async function versitioning(this: any, next: CallbackWithoutResultAndOptionalError) {
+  if (typeof this.__v === "number") {
+    this.__v += 1;
+  } else {
+    this.__v = 0;
+  }
+  next();
+}
+
+TicketSchema.pre<ITicket>("save", versitioning);
 
 const Ticket = model<ITicket, TicketModel>("Ticket", TicketSchema);
 

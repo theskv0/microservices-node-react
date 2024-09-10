@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import validateEnv from "./env.validation";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import { JwtUtil } from "@project3/common";
+import { JwtUtil, nats, order } from "@project3/common";
 import Ticket from "../src/models/ticket.model";
 import User from "../src/models/user.model";
 
@@ -21,6 +21,9 @@ beforeAll(async () => {
   mongo = await MongoMemoryServer.create();
   const mongoUri = mongo.getUri();
   await mongoose.connect(mongoUri);
+
+  await nats.connect("nats://localhost:4222");
+  await nats.createStream(order.streamName, Object.values(order.subjects));
 });
 
 beforeEach(async () => {

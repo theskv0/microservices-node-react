@@ -34,12 +34,14 @@ const TicketController = {
 
     ticket.title = title ?? ticket.title;
     ticket.price = price ?? ticket.price;
+    ticket.__v += 1;
     await ticket.save();
 
     new TicketUpdatedPublisher(nats.client).publish({
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,
+      version: ticket.__v,
     });
 
     return res.json({ ticket });
@@ -54,7 +56,7 @@ const TicketController = {
     const skip = (page - 1) * limit;
 
     let payload: { [key: string]: any } = {};
-    if (own) payload.user_id = req.auth_user_id;
+    if (own) payload.user = req.auth_user_id;
     if (search) payload.title = new RegExp(search, "i");
 
     const total = await Ticket.find(payload).countDocuments();

@@ -1,8 +1,8 @@
 import request from "supertest";
-import app from "../../../app";
+import app from "../../app";
 
 it("Find: 200 success", async () => {
-  const cookie = global.signin();
+  const cookie = await global.signin();
   const response = await request(app)
     .post("/api/ticket")
     .set("Cookie", cookie)
@@ -28,6 +28,6 @@ it("Find: 401 unauthenticated", async () => {
 it("Find: 422 unable to find", async () => {
   await request(app)
     .get("/api/ticket/" + "ticket.id")
-    .set("Cookie", global.signin())
+    .set("Cookie", await global.signin())
     .expect(422);
 });

@@ -2,7 +2,7 @@ import { Event, nats } from ".";
 import { JetStreamClient, NatsConnection } from "nats";
 
 export abstract class NatsPublisher<T extends Event> {
-  abstract subject: Event["subject"];
+  abstract subject: T["subject"];
 
   private client: NatsConnection;
   private jetstream: JetStreamClient;
@@ -12,7 +12,7 @@ export abstract class NatsPublisher<T extends Event> {
     this.jetstream = this.client.jetstream();
   }
 
-  async publish(data: Event["data"]) {
+  async publish(data: T["data"]) {
     const publishAck = await this.jetstream.publish(this.subject, JSON.stringify(data));
     if (nats.debug) {
       console.log({

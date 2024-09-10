@@ -5,7 +5,7 @@ import { userUpdatedHandler } from "./handlers/user-updated.handler";
 
 export class AuthListener extends NatsListener<Listener> {
   stream: Listener["stream"] = auth.streamName;
-  queueGroup: Listener["queueGroup"] = "order-service";
+  queueGroup: Listener["queueGroup"] = "ticket-service";
 
   async onMessage(data: Listener["data"], msg: JsMsg) {
     switch (msg.subject) {

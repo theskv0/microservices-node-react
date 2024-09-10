@@ -1,15 +1,12 @@
 import { model, Model, Schema, ObjectId, Types } from "mongoose";
 import IBase from "./base.model";
-
-export enum OrderStatus {
-  Pending = "pending",
-  Paid = "paid",
-  Expired = "expired",
-}
+import { OrderStatus } from "@project3/common";
+import { IUser } from "./user.model";
+import { ITicket } from "./ticket.model";
 
 export interface IOrder extends IBase {
-  user: ObjectId;
-  ticket: ObjectId;
+  user: IUser;
+  ticket: ITicket;
   status: OrderStatus;
   expiresAt: Date;
 }
@@ -35,6 +32,7 @@ const OrderSchema = new Schema<IOrder, OrderModel>(
     },
     expiresAt: {
       type: Date,
+      required: true,
     },
   },
   {

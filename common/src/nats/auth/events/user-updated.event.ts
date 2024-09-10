@@ -5,5 +5,6 @@ export interface UserUpdatedEvent {
   data: {
     id: string;
     name: string;
+    version: number;
   };
 }

@@ -1,8 +1,8 @@
 import request from "supertest";
-import app from "../../../app";
+import app from "../../app";
 
 it("Get: 200 success", async () => {
-  const cookie = global.signin();
+  const cookie = await global.signin();
   await request(app)
     .post("/api/ticket")
     .set("Cookie", cookie)
@@ -25,7 +25,7 @@ it("Get: 200 success", async () => {
 });
 
 it("Get: 200 pagination", async () => {
-  const cookie = global.signin();
+  const cookie = await global.signin();
   for (let i = 1; i <= 5; i++) {
     await request(app)
       .post("/api/ticket")
@@ -53,7 +53,7 @@ it("Get: 200 pagination", async () => {
 });
 
 it("Get: 200 search", async () => {
-  const cookie = global.signin();
+  const cookie = await global.signin();
   const arr = [
     { title: "Test", price: 100 },
     { title: "Hello world", price: 50 },
@@ -80,8 +80,12 @@ it("Get: 200 search", async () => {
 });
 
 it("Get: 200 own", async () => {
-  await request(app).post("/api/ticket").set("Cookie", global.signin()).send({ title: "Test", price: 100 }).expect(201);
-  const cookie = global.signin();
+  await request(app)
+    .post("/api/ticket")
+    .set("Cookie", await global.signin())
+    .send({ title: "Test", price: 100 })
+    .expect(201);
+  const cookie = await global.signin();
   await request(app).post("/api/ticket").set("Cookie", cookie).send({ title: "Hello world", price: 50 }).expect(201);
 
   await request(app)
@@ -108,7 +112,7 @@ it("Get: 401 unauthenticated", async () => {
 });
 
 it("Get: 422 invalid input", async () => {
-  const cookie = global.signin();
+  const cookie = await global.signin();
   await request(app).get("/api/ticket").set("Cookie", cookie).query({ page: "test" }).expect(422);
   await request(app).get("/api/ticket").set("Cookie", cookie).query({ limit: "test" }).expect(422);
   await request(app).get("/api/ticket").set("Cookie", cookie).query({ own: "test" }).expect(422);

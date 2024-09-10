@@ -53,8 +53,9 @@ const AuthController = {
     const user: HydratedDocument<IUser> | null = await User.findById(req.auth_user_id);
     if (user) {
       user.name = req.body.name;
+      user.__v += 1;
       await user.save();
-      new UserUpdatedPublisher(nats.client).publish({ id: user.id, name: user.name });
+      new UserUpdatedPublisher(nats.client).publish({ id: user.id, name: user.name, version: user.__v });
     }
     return res.json({ user });
   },

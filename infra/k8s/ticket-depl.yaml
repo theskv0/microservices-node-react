@@ -22,7 +22,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: app-secret
-                  key: ORDER_MONGO_URI
+                  key: TICKET_MONGO_URI
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:

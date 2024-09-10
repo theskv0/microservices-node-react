@@ -1,10 +1,10 @@
 import request from "supertest";
-import app from "../../../app";
+import app from "../../app";
 
 it("Create: 201 on valid input", async () => {
   await request(app)
     .post("/api/ticket")
-    .set("Cookie", global.signin())
+    .set("Cookie", await global.signin())
     .send({
       title: "Test",
       price: 100,
@@ -25,7 +25,7 @@ it("Create: 401 on unauthenticated", async () => {
 it("Create: 422 on invalid title", async () => {
   await request(app)
     .post("/api/ticket")
-    .set("Cookie", global.signin())
+    .set("Cookie", await global.signin())
     .send({
       title: 5,
       price: 100,
@@ -36,7 +36,7 @@ it("Create: 422 on invalid title", async () => {
 it("Create: 422 on invalid price", async () => {
   await request(app)
     .post("/api/ticket")
-    .set("Cookie", global.signin())
+    .set("Cookie", await global.signin())
     .send({
       title: "Test",
       price: "price",
