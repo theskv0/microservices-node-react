@@ -4,6 +4,7 @@ import { HydratedDocument } from "mongoose";
 import { AccessDeniedException, nats, ValidationException } from "@project3/common";
 import { TicketCreatedPublisher } from "../publishers/ticket-created.publisher";
 import { TicketUpdatedPublisher } from "../publishers/ticket-updated.publisher";
+import { isTicketLocked } from "../utils/healper";
 
 const TicketController = {
   create: async (req: Request, res: Response) => {
@@ -31,20 +32,24 @@ const TicketController = {
 
     if (!ticket) throw new ValidationException({ ticket_id: "unable to find any ticket with this ticket_id" });
     if (ticket.user.toString() !== req.auth_user_id) throw new AccessDeniedException();
+    console.log(isTicketLocked(ticket));
 
-    ticket.title = title ?? ticket.title;
-    ticket.price = price ?? ticket.price;
-    ticket.__v += 1;
-    await ticket.save();
+    // if (checkTicketLocked(ticket))
+    //   throw new ValidationException({ ticket_id: "ticket is locked you can not modify it." });
+    return res.json({});
+    // ticket.title = title ?? ticket.title;
+    // ticket.price = price ?? ticket.price;
+    // ticket.__v += 1;
+    // await ticket.save();
 
-    new TicketUpdatedPublisher(nats.client).publish({
-      id: ticket.id,
-      title: ticket.title,
-      price: ticket.price,
-      version: ticket.__v,
-    });
+    // new TicketUpdatedPublisher(nats.client).publish({
+    //   id: ticket.id,
+    //   title: ticket.title,
+    //   price: ticket.price,
+    //   version: ticket.__v,
+    // });
 
-    return res.json({ ticket });
+    // return res.json({ ticket });
   },
 
   get: async (req: Request, res: Response) => {

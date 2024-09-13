@@ -17,8 +17,13 @@ const start = async () => {
     nats.client.closed().then(() => console.log("NATS closed -> order"));
   });
   await nats.createStream(order.streamName, Object.values(order.subjects));
+
+  await nats.createStream(auth.streamName, Object.values(auth.subjects));
   await nats.addConsumer(auth.streamName, "order-service");
+
+  await nats.createStream(ticket.streamName, Object.values(ticket.subjects));
   await nats.addConsumer(ticket.streamName, "order-service");
+
   startNatsListeners();
 
   await mongoose

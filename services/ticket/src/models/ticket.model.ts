@@ -1,4 +1,4 @@
-import { CallbackWithoutResultAndOptionalError, model, Model, Schema, Types } from "mongoose";
+import { CallbackWithoutResultAndOptionalError, model, Model, ObjectId, Schema, Types } from "mongoose";
 import IBase from "./base.model";
 import { IUser } from "./user.model";
 
@@ -6,6 +6,7 @@ export interface ITicket extends IBase {
   title: string;
   price: number;
   user: IUser;
+  order: string;
 }
 
 export type TicketModel = Model<ITicket>;
@@ -24,6 +25,11 @@ const TicketSchema = new Schema<ITicket, TicketModel>(
       type: Types.ObjectId,
       required: true,
       ref: "User",
+    },
+    order: {
+      type: String,
+      required: false,
+      default: null,
     },
   },
   {
